@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import LoadingButton from './LoadingButton'
 import authContext from "../Context/authContext";
+import image from "../assets/diary.png"
 
 const LoginRegister = () => {
   const [isLoading, setIsLoading] = useState();
@@ -235,7 +236,7 @@ const LoginRegister = () => {
         </div>
         <div className="w-1/2 p-6 bg-indigo-50 flex items-center justify-center">
           <img
-            src="../assets/diary.png"
+            src={image}
             alt="diary"
             className="w-full h-full object-cover rounded-lg"
           />
