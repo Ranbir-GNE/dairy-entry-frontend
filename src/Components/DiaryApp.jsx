@@ -99,6 +99,7 @@ const DiaryApp = () => {
     } catch (err) {
       toast.error("Failed to add new entry.");
       console.log(err);
+      setIsLoading(false);
     }
   };
 
