@@ -1,12 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import LoginRegister from "./Components/LoginRegister";
 import { Toaster } from "sonner";
-import Error from "./Components/Error";
 import authContext from "./Context/authContext";
 import ProtectedRoute from "./Components/ProtectedRoute";
-import { useState } from "react";
-import DiaryApp from "./Components/DiaryApp";
+import { useState, lazy, Suspense } from "react";
+import Error from "./Components/Error";
+
+const LoginRegister = lazy(() => import("./Components/LoginRegister"));
+const DiaryApp = lazy(() => import("./Components/DiaryApp"));
+const Upload = lazy(() => import("./Components/Upload"));
 
 function App() {
   const [auth, setAuth] = useState(false);
@@ -14,13 +16,16 @@ function App() {
     <>
       <authContext.Provider value={{ auth, setAuth }}>
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<LoginRegister />} />
-            <Route element={<ProtectedRoute />}>
-              <Route path="/home" element={<DiaryApp />} />
-            </Route>
-            <Route path="*" element={<Error />} />
-          </Routes>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route path="/" element={<LoginRegister />} />
+              <Route path="/upload" element={<Upload />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/home" element={<DiaryApp />} />
+              </Route>
+              <Route path="*" element={<Error />} />
+            </Routes>
+          </Suspense>
           <Toaster
             {...{
               position: "top-right",
