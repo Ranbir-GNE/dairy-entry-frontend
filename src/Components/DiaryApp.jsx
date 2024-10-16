@@ -6,7 +6,7 @@ import LoadingButton from "./LoadingButton";
 
 const DiaryApp = () => {
   const [currentUser, setCurrentUser] = useState("");
-  const [isLoading, setIsLoading] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const [entries, setEntries] = useState([]);
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +18,7 @@ const DiaryApp = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedImage, setSelectedImage] = useState([]);
+
   const getUserFromToken = async () => {
     const token = localStorage.getItem("key");
     try {
@@ -169,13 +170,13 @@ const DiaryApp = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <nav className="bg-blue-600 text-white py-4 px-6 flex justify-between items-center shadow-md">
-        <h1 className="text-2xl font-bold">Daily Diary</h1>
+        <h1 className="text-2xl font-bold md:text-3xl">Daily Diary</h1>
         <input
           type="text"
           placeholder="Search entries..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex p-2 border rounded mr-4 text-black w-1/3"
+          className="flex p-2 border rounded mr-4 text-black w-1/2 md:w-1/3 lg:w-1/4"
         />
         <div className="flex items-center">
           <span className="mr-4 text-lg font-semibold">{currentUser}</span>
@@ -189,7 +190,7 @@ const DiaryApp = () => {
       </nav>
 
       <div className="flex flex-grow">
-        <div className="w-1/3 bg-white p-4 shadow-lg space-y-4">
+        <div className="w-full md:w-1/3 bg-white p-4 md:p-6 shadow-lg space-y-4">
           <button
             className="w-full bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
             onClick={() => setIsOpen(true)}
@@ -210,7 +211,9 @@ const DiaryApp = () => {
                   }`}
                   onClick={() => setSelectedEntry(entry)}
                 >
-                  <h2 className="text-lg font-bold">{entry.title}</h2>
+                  <h2 className="text-lg font-bold md:text-xl">
+                    {entry.title}
+                  </h2>
                   <p className="text-sm text-gray-500">
                     {format(new Date(entry.createdAt), "dd/MM/yyyy")}
                   </p>
@@ -219,11 +222,13 @@ const DiaryApp = () => {
           </ul>
         </div>
 
-        <div className="w-2/3 p-6 bg-gray-50 rounded-lg shadow-md">
+        <div className="w-full md:w-2/3 p-4 md:p-6 bg-gray-50 rounded-lg shadow-md">
           {selectedEntry ? (
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold">{selectedEntry.title}</h2>
+                <h2 className="text-xl md:text-2xl font-bold">
+                  {selectedEntry.title}
+                </h2>
                 <div className="space-x-2">
                   <button
                     onClick={() => setIsEditing(!isEditing)}
@@ -266,104 +271,83 @@ const DiaryApp = () => {
                       })
                     }
                     className="w-full p-2 border rounded"
+                    rows="4"
                   />
-                  <button
+                  <LoadingButton
                     onClick={() => handleEditEntry(selectedEntry._id)}
-                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
-                  >
-                    Save Changes
-                  </button>
+                  />
                 </div>
               ) : (
-                <p className="mt-4">{selectedEntry.description}</p>
-              )}
-
-              {selectedEntry.media && selectedEntry.media.length > 0 && (
-                <div className="mt-6">
-                  <h3 className="text-lg font-semibold mb-2">
-                    Attached Media:
-                  </h3>
-                  <div className="grid grid-cols-3 gap-4">
-                    {selectedEntry.media.map((mediaUrl, index) => (
-                      <div
-                        key={index}
-                        className="w-32 h-32 cursor-pointer"
-                        onClick={() => openImageInNewTab(mediaUrl)}
-                      >
-                        <img
-                          src={mediaUrl}
-                          alt={`Media ${index + 1}`}
-                          className="object-cover w-full h-full rounded-lg shadow-md"
-                        />
-                      </div>
-                    ))}
-                  </div>
+                <div>
+                  <p className="mt-4">{selectedEntry.description}</p>
+                  {selectedEntry.media.length > 0 && (
+                    <div className="mt-4 grid grid-cols-2 gap-2">
+                      {selectedEntry.media.map((url) => (
+                        <div
+                          key={url}
+                          className="cursor-pointer"
+                          onClick={() => openImageInNewTab(url)}
+                        >
+                          <img
+                            src={url}
+                            alt="Diary media"
+                            className="rounded-lg shadow-md"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           ) : (
-            <p className="text-gray-500">Select an entry to view details</p>
+            <div className="text-center text-gray-500">
+              <p>Select an entry to view details</p>
+            </div>
           )}
         </div>
       </div>
 
-      {/* Modal for adding new entry */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white rounded-lg p-6 w-1/2 shadow-xl space-y-4">
-            <h2 className="text-xl font-bold">Add New Entry</h2>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setIsLoading(true);
-                handleAddEntry();
-              }}
-              className="space-y-4"
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-1/3">
+            <h2 className="text-xl font-bold mb-4">Add New Entry</h2>
+            <input
+              type="text"
+              placeholder="Title"
+              value={newEntry.title}
+              onChange={(e) =>
+                setNewEntry({ ...newEntry, title: e.target.value })
+              }
+              className="w-full p-2 border rounded mb-4"
+            />
+            <textarea
+              placeholder="Description"
+              value={newEntry.description}
+              onChange={(e) =>
+                setNewEntry({ ...newEntry, description: e.target.value })
+              }
+              className="w-full p-2 border rounded mb-4"
+              rows="4"
+            />
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageChange}
+              className="mb-4"
+            />
+            <LoadingButton
+              onClick={handleAddEntry}
+              isLoading={isLoading}
+              buttonText="Add Entry"
+            />
+            <button
+              onClick={() => setIsOpen(false)}
+              className="mt-2 text-red-500 hover:underline"
             >
-              <input
-                type="text"
-                placeholder="Title"
-                value={newEntry.title}
-                onChange={(e) =>
-                  setNewEntry({ ...newEntry, title: e.target.value })
-                }
-                className="w-full p-3 border rounded-lg"
-              />
-              <textarea
-                placeholder="Description"
-                value={newEntry.description}
-                onChange={(e) =>
-                  setNewEntry({ ...newEntry, description: e.target.value })
-                }
-                className="w-full p-3 border rounded-lg"
-              />
-              <div className="flex items-center space-x-4">
-                <input type="file" multiple onChange={handleImageChange} />
-                {selectedImage && (
-                  <img
-                    src={selectedImage}
-                    alt="Selected"
-                    className="w-32 h-32 object-cover"
-                  />
-                )}
-              </div>
-              <div className="flex justify-end space-x-4">
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition-colors"
-                >
-                  Cancel
-                </button>
-
-                <LoadingButton
-                  isLoading={isLoading}
-                  type="submit"
-                  className="w-full bg-green-500 text-white py-2 rounded-lg font-semibold disabled:brightness-50 hover:bg-green-700 transition duration-300"
-                >
-                  Upload
-                </LoadingButton>
-              </div>
-            </form>
+              Cancel
+            </button>
           </div>
         </div>
       )}

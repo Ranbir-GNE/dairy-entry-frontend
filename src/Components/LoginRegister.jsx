@@ -2,9 +2,9 @@ import axios from "axios";
 import { useContext, useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import LoadingButton from './LoadingButton'
+import LoadingButton from "./LoadingButton";
 import authContext from "../Context/authContext";
-import image from "../assets/diary.png"
+import image from "../assets/diary.png";
 
 const LoginRegister = () => {
   const [isLoading, setIsLoading] = useState();
@@ -38,7 +38,7 @@ const LoginRegister = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
       const response = await axios.post(
@@ -64,13 +64,13 @@ const LoginRegister = () => {
         error.response?.data?.message || "Login failed. Please try again."
       );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setIsLoading(true)
+    setIsLoading(true);
 
     if (registerData.password !== registerData.confirmPassword) {
       setErrorMessage("Passwords do not match");
@@ -95,15 +95,16 @@ const LoginRegister = () => {
         error.response?.data?.message ||
           "Registration failed. Please try again."
       );
-    }finally {
-      setIsLoading(false)
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-      <div className="w-full max-w-4xl p-6 bg-white rounded-lg shadow-lg flex">
-        <div className="w-1/2 p-6">
+      <div className="w-full max-w-4xl p-4 bg-white rounded-lg shadow-lg flex flex-col lg:flex-row mx-2 items-center">
+        {/* Left Side - Form Section */}
+        <div className="w-full lg:w-1/2 p-4">
           <div className="flex justify-around mb-6">
             <button
               onClick={() => {
@@ -234,7 +235,9 @@ const LoginRegister = () => {
             </form>
           )}
         </div>
-        <div className="w-1/2 p-6 bg-indigo-50 flex items-center justify-center">
+
+        {/* Right Side - Image Section */}
+        <div className="hidden lg:flex w-1/2 p-6 bg-indigo-50 items-center justify-center">
           <img
             src={image}
             alt="diary"
