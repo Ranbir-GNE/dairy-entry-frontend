@@ -190,7 +190,7 @@ const DiaryApp = () => {
       </nav>
 
       <div className="flex flex-grow">
-        <div className="w-full md:w-1/3 bg-white p-4 md:p-6 shadow-lg space-y-4">
+        <div className="md:w-1/3 bg-white p-2 md:p-3 shadow-lg space-y-4">
           <button
             className="w-full bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
             onClick={() => setIsOpen(true)}
@@ -206,7 +206,7 @@ const DiaryApp = () => {
               .map((entry) => (
                 <li
                   key={entry._id}
-                  className={`p-4 cursor-pointer rounded-lg hover:bg-gray-100 transition-colors ${
+                  className={`p-2 cursor-pointer rounded-lg hover:bg-gray-100 transition-colors ${
                     selectedEntry?._id === entry._id ? "bg-gray-200" : ""
                   }`}
                   onClick={() => setSelectedEntry(entry)}
@@ -222,7 +222,7 @@ const DiaryApp = () => {
           </ul>
         </div>
 
-        <div className="w-full md:w-2/3 p-4 md:p-6 bg-gray-50 rounded-lg shadow-md">
+        <div className="w-full md:w-2/3 p-2 md:p-3 bg-gray-50 shadow-md">
           {selectedEntry ? (
             <div className="space-y-4">
               <div className="flex justify-between items-center">
@@ -232,13 +232,13 @@ const DiaryApp = () => {
                 <div className="space-x-2">
                   <button
                     onClick={() => setIsEditing(!isEditing)}
-                    className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition-colors"
+                    className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 transition-colors"
                   >
                     {isEditing ? "Cancel" : "Edit"}
                   </button>
                   <button
                     onClick={() => handleDeleteEntry(selectedEntry._id)}
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+                    className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors"
                   >
                     Delete
                   </button>
