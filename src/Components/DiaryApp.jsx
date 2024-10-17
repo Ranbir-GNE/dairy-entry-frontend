@@ -76,6 +76,10 @@ const DiaryApp = () => {
             `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/upload`,
             formData
           );
+          if (!response) {
+            toast.error("Failed to upload image(s).");
+            return;
+          }
 
           imageUrls.push(response.data.secure_url); // Collect all image URLs
         }
